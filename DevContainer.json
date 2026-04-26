@@ -1,0 +1,32 @@
+{
+  "name": "LLM Inference — Jetson Orin",
+
+  // Reference the running docker-compose service instead of rebuilding
+  "dockerComposeFile": "../docker-compose.yml",
+  "service": "llm-dev",
+  "workspaceFolder": "/workspace",
+
+  // ── VS Code extensions installed inside the container ──────────────────────
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-python.python",
+        "ms-python.pylance",
+        "ms-toolsai.jupyter",
+        "ms-vscode.cpptools",
+        "nvidia.nsight-vscode-edition"   // GPU profiling (optional)
+      ],
+      "settings": {
+        "python.defaultInterpreterPath": "/usr/bin/python3",
+        "python.terminal.activateEnvironment": false,
+        "terminal.integrated.defaultProfile.linux": "bash"
+      }
+    }
+  },
+
+  // Keep container running when VS Code disconnects
+  "shutdownAction": "none",
+
+  // Post-attach: print CUDA info so you know the GPU is visible
+  "postAttachCommand": "python3 -c \"import torch; print('CUDA:', torch.cuda.is_available(), '| Device:', torch.cuda.get_device_name(0) if torch.cuda.is_available() else 'CPU')\""
+}

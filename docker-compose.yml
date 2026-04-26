@@ -1,0 +1,37 @@
+services:
+  llm-dev:
+    image: llm-inference-orin:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: llm-inference-orin
+
+    runtime: nvidia
+    environment:
+      - NVIDIA_VISIBLE_DEVICES=all
+      - NVIDIA_DRIVER_CAPABILITIES=compute,utility
+      - CUDA_VISIBLE_DEVICES=0
+      - CUBLAS_WORKSPACE_CONFIG=:16:8
+      - PYTORCH_CUDA_ALLOC_CONF=max_split_size_mb:128
+      - PYTHONPATH=/workspace
+      - TRITON_CACHE_DIR=/workspace/.triton_cache
+
+    volumes:
+      - .:/workspace
+      - huggingface-cache:/root/.cache/huggingface
+      - triton-cache:/workspace/.triton_cache
+      # Host CUDA runtime (libcudart.so.12, libcublas, etc.)
+      - /usr/local/cuda:/usr/local/cuda:ro
+      # Host cuDNN 9 (libcudnn.so.9 and all sub-libs)
+      - /usr/lib/aarch64-linux-gnu:/usr/lib/aarch64-linux-gnu:ro
+
+    working_dir: /workspace
+    stdin_open: true
+    tty: true
+    command: /bin/bash
+    network_mode: host
+    shm_size: "2gb"
+
+volumes:
+  huggingface-cache:
+  triton-cache:

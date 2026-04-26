@@ -1,18 +1,39 @@
-torch>=2.2.0
+# =============================================================================
+# Jetson Orin — LLM Inference Optimization Engine
+# torch is installed separately via Jetson AI Lab index (see Dockerfile).
+# Everything here installs from standard PyPI.
+# =============================================================================
+
+# ── HuggingFace stack (Block 1 — model + tokenizer loading) ──────────────────
 transformers>=4.40.0
 accelerate>=0.30.0
-
-sentencepiece>=0.1.99
+huggingface_hub
 tokenizers>=0.15.0
+sentencepiece>=0.1.99
 
+# ── CUDA / GPU memory tracking (Block 4 — profiling feedback loop) ────────────
+pynvml
+gputil
+
+# ── Profiling + tracing (Block 4) ─────────────────────────────────────────────
+torch-tb-profiler
+tensorboard
+
+# ── Async batching / scheduling layer (Block 5 — request queue) ──────────────
+aiohttp
+uvloop
+
+# ── Numerical / scientific ────────────────────────────────────────────────────
 numpy==1.26.4
 scipy>=1.10.0
 
-tqdm>=4.66.0
-pyyaml>=6.0
-matplotlib>=3.7.0
+# ── Data + visualization (benchmark plots) ────────────────────────────────────
 pandas>=2.0.0
+matplotlib>=3.7.0
+seaborn
 
+# ── General utilities ─────────────────────────────────────────────────────────
 rich>=13.0.0
 psutil>=5.9.0
-
+tqdm>=4.66.0
+pyyaml>=6.0
