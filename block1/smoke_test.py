@@ -7,6 +7,23 @@ Usage:
     python scripts/smoke_test.py --device cpu   # no GPU
 """
 
+# ---------------------------------------------------------------------------
+# Jetson Orin (nvgpu) compatibility — must run before any torch/transformers
+# import that touches CUDA. The Orin uses unified memory; the default PyTorch
+# CUDACachingAllocator tries a discrete-GPU warmup path that doesn't exist on
+# nvgpu and raises INTERNAL ASSERT FAILED in CUDACachingAllocator.cpp:838.
+# Switching to cudaMallocAsync bypasses that path entirely.
+# ---------------------------------------------------------------------------
+import os
+os.environ.setdefault("PYTORCH_CUDA_ALLOC_CONF", "backend:cudaMallocAsync")
+os.environ.setdefault("PYTORCH_NO_CUDA_MEMORY_CACHING", "1")
+
+# Suppress deprecated pynvml warning (harmless but noisy on Jetson images
+# that still ship pynvml before nvidia-ml-py is installed).
+import warnings
+warnings.filterwarnings("ignore", category=FutureWarning, module="torch.cuda")
+# ---------------------------------------------------------------------------
+
 import argparse
 import torch
 from pathlib import Path

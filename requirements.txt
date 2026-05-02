@@ -5,14 +5,17 @@
 # =============================================================================
 
 # ── HuggingFace stack (Block 1 — model + tokenizer loading) ──────────────────
-transformers>=4.40.0
+# Pin below 4.47 — 4.47+ introduced caching_allocator_warmup which breaks
+# on Jetson Orin nvgpu (unified memory, no discrete VRAM allocator path).
+# See: transformers/modeling_utils.py::caching_allocator_warmup
+transformers>=4.40.0,<4.47.0
 accelerate>=0.30.0
 huggingface_hub
 tokenizers>=0.15.0
 sentencepiece>=0.1.99
 
 # ── CUDA / GPU memory tracking (Block 4 — profiling feedback loop) ────────────
-pynvml
+nvidia-ml-py
 gputil
 
 # ── Profiling + tracing (Block 4) ─────────────────────────────────────────────

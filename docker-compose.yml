@@ -12,7 +12,8 @@ services:
       - NVIDIA_DRIVER_CAPABILITIES=compute,utility
       - CUDA_VISIBLE_DEVICES=0
       - CUBLAS_WORKSPACE_CONFIG=:16:8
-      - PYTORCH_CUDA_ALLOC_CONF=max_split_size_mb:128
+      - PYTORCH_CUDA_ALLOC_CONF=backend:cudaMallocAsync
+      - PYTORCH_NO_CUDA_MEMORY_CACHING=1
       - PYTHONPATH=/workspace
       - TRITON_CACHE_DIR=/workspace/.triton_cache
 
