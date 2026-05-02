@@ -35,7 +35,7 @@ from model.engine import BaselineInferenceEngine
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--model", default="Qwen/Qwen2-0.5B")
+    parser.add_argument("--model", default="distilgpt2")
     parser.add_argument("--device", default="cuda" if torch.cuda.is_available() else "cpu")
     parser.add_argument("--max_tokens", type=int, default=30)
     args = parser.parse_args()
